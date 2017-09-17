@@ -24,8 +24,6 @@ public class FlashLightActivity extends AppCompatActivity {
         vpPager.setAdapter(adapterViewPager);
 
 
-
-
     }
 
 

@@ -90,13 +90,18 @@ public class MorseFlashLightFragment extends Fragment {
     }
 
     public void sendMorse(final ArrayList<String[]> wordtomorse) {
-        long time;
+        long time=0;
 
 
-        Handler handler = new Handler();
+       final  Handler handler = new Handler();
         for (int i = 0; i < wordtomorse.size(); i++) {
             final String[] morseword = wordtomorse.get(i);
             Log.e("MorseCode", "" + Arrays.toString(wordtomorse.get(i)));
+            camera = Camera.open();
+            final Camera.Parameters parameters = camera.getParameters();
+            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+            camera.setParameters(parameters);
+            camera.startPreview();
             for (final String morseletter : morseword) {
                 if (morseletter.equals(".")) {
                     time = 1000;
@@ -104,40 +109,25 @@ public class MorseFlashLightFragment extends Fragment {
                     time = 4000;
                 }
 
-
-
-                    camera = Camera.open();
-                    Camera.Parameters parameters = camera.getParameters();
-                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-                    camera.setParameters(parameters);
-                    camera.startPreview();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-
-
-
-                            Log.e("MorseCode", "" + morseletter);
-
-
+                            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                            camera.setParameters(parameters);
+                            camera.stopPreview();
 
                         }
                     }, time);
-
+                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                camera.setParameters(parameters);
+                camera.startPreview();
 
             }
-            camera = Camera.open();
-            Camera.Parameters parameters = camera.getParameters();
-            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-            camera.stopPreview();
+
 
         }
 
-        camera = Camera.open();
-        Camera.Parameters parameters = camera.getParameters();
-        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-        camera.stopPreview();
-        camera.release();
+
         textformorse.setEnabled(true);
         sendmorse.setEnabled(true);
 
